@@ -1,4 +1,4 @@
-# import bpy
+import bpy
 
 # bpy.ops.export_scene.obj(filepath='/Users/jthuy/Desktop/BConv/test12.obj')
 
@@ -16,3 +16,19 @@
 # bpy.ops.curve.select_all(action='SELECT')
 # bpy.ops.curve.handle_type_set(type='VECTOR')
 # bpy.ops.curve.de_select_first()
+
+# bpy.context.scene.objects['Plane'].data.vertices[0].co[2] = 2
+
+# del all objects from scene
+#for i in bpy.data.objects:
+#    i.select_set(1)
+#    bpy.ops.object.delete()
+
+# del all objects from scene
+for i in bpy.context.scene.objects:
+    i.select_set(1)
+    bpy.ops.object.delete()
+
+
+# bpy.context.scene.objects['Plane'].data.vertices[0].co[2] = 2
+# bpy.data.objects['Plane'].data.vertices[0].co[2] = 2
