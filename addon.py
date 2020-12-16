@@ -1,13 +1,15 @@
 import bpy
-import sys
+import sys # to work geopandas
 sys.path.append('/Users/jthuy/.local/lib/python3.7/site-packages')
-
-#import fiona
 import geopandas
 
+
+path = "/Users/jthuy/Desktop/BConv/"
+file = "engenier_network.gpkg"
+
+
 # parsing in geopandas
-file = geopandas.read_file('/Users/jthuy/Desktop/BConv/engenier_network.gpkg')
-file.head(10)
+
 
 
 # bpy.ops.export_scene.obj(filepath='/Users/jthuy/Desktop/BConv/test12.obj')
@@ -53,3 +55,15 @@ file.head(10)
 #bpy.ops.curve.primitive_bezier_curve_add()
 #bpy.data.objects[0].data.splines.active.bezier_points[0].co[2] = 2
 #bpy.context.object.data.splines.active.bezier_points[0].co[2] = 2
+
+def main():
+	parsing_file()
+
+def parsing_file():
+	data = geopandas.read_file(path + file)
+	print(data.head(1))
+
+
+
+if __name__ == "__main__":
+	main()
