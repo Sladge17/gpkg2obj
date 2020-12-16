@@ -58,9 +58,9 @@ file = "engenier_network.gpkg"
 
 def main():
 	clear_scene()
-	parsing_file()
-	export_mesh2obj()
-	
+#	parsing_file()
+	create_mesh()
+#	export_mesh2obj()
 
 def clear_scene():
 	bpy.ops.object.select_all(action='SELECT')
@@ -69,6 +69,24 @@ def clear_scene():
 def parsing_file():
 	data = geopandas.read_file(path + file)
 	print(data.head(1))
+	
+def create_mesh():
+	create_pipeline()
+	
+def create_pipeline():
+	create_pipe()
+	
+def create_pipe():
+	bpy.ops.curve.primitive_bezier_curve_add()
+	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[0], (0, 0, 0))
+	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[1], (0, 0, 2))
+	
+def set_vertpos(vertex, pos):
+	vertex.co[0] = pos[0]
+	vertex.co[1] = pos[1]
+	vertex.co[2] = pos[2]
+	
+	
 
 def export_mesh2obj(name="test.obj"):
 	if (len(bpy.data.objects)):
