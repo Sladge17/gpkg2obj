@@ -8,27 +8,6 @@ path = "/Users/jthuy/Desktop/BConv/"
 file = "engenier_network.gpkg"
 
 
-# parsing in geopandas
-
-
-
-# bpy.ops.export_scene.obj(filepath='/Users/jthuy/Desktop/BConv/test12.obj')
-
-# datapath = "/Users/jthuy/Desktop/BConv/engenier_network.gpkg"
-
-# with open(datapath, 'rb') as file:
-#   data = file.read(10)
-  
-# print(data)
-
-# import bpy
-
-# bpy.ops.curve.primitive_bezier_curve_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
-# bpy.ops.object.editmode_toggle()
-# bpy.ops.curve.select_all(action='SELECT')
-# bpy.ops.curve.handle_type_set(type='VECTOR')
-# bpy.ops.curve.de_select_first()
-
 # bpy.context.scene.objects['Plane'].data.vertices[0].co[2] = 2
 
 # del all objects from scene
@@ -75,19 +54,41 @@ def create_mesh():
 	
 def create_pipeline():
 	create_pipe()
+	extrude_pipe((2, 0, 2))
+	add_pipe()
 	set_pipelinesetting(bpy.context.selected_objects[0])
-	extrude_pipe(bpy.context.selected_objects[0].data.splines[0].bezier_points[1], (2, 0, 2))
 	
 def create_pipe():
 	bpy.ops.curve.primitive_bezier_curve_add()
 	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[0], (0, 0, 0))
 	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[1], (0, 0, 2))
 	
+def extrude_pipe(pos):
+	bpy.ops.object.editmode_toggle()
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_control_point = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_left_handle = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_right_handle = 0
+	bpy.ops.curve.extrude_move()
+	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[2], (pos[0], pos[1], pos[2]))
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_control_point = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_left_handle = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_right_handle = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[1].select_control_point = 1
+	# value need fix, angle betveen vertexes respondsiable (1.4 = 90 deg) !!!
+	bpy.ops.transform.transform(mode='CURVE_SHRINKFATTEN', value=(1.4, 0, 0, 0))
+	bpy.ops.object.editmode_toggle()
+	
+def add_pipe():
+	bpy.ops.object.editmode_toggle()
+	bpy.ops.curve.primitive_bezier_curve_add()
+	set_vertpos(bpy.context.selected_objects[0].data.splines[1].bezier_points[0], (1, 0, 0))
+	set_vertpos(bpy.context.selected_objects[0].data.splines[1].bezier_points[1], (1, 0, 2))
+	bpy.ops.object.editmode_toggle()
+	
 def set_vertpos(vertex, pos):
 	vertex.co[0] = pos[0]
 	vertex.co[1] = pos[1]
 	vertex.co[2] = pos[2]
-	
 	
 def set_pipelinesetting(pipeline):
 	pipeline.data.bevel_depth = 0.2
@@ -96,29 +97,13 @@ def set_pipelinesetting(pipeline):
 	bpy.ops.curve.select_all(action='SELECT')
 	bpy.ops.curve.handle_type_set(type='VECTOR')
 	bpy.ops.object.editmode_toggle()
-
-	
-def extrude_pipe(origin, pos):
-	bpy.ops.object.editmode_toggle()
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_control_point = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_left_handle = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_right_handle = 0
-	bpy.ops.curve.extrude_move()
-	bpy.ops.transform.translate(value=(0, 0, 0)) # local move, need fix to move into end crd
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_control_point = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_left_handle = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_right_handle = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[1].select_control_point = 1
-	bpy.ops.transform.transform(mode='CURVE_SHRINKFATTEN', value=(1.4, 0, 0, 0))
-	bpy.ops.object.editmode_toggle()
-
-
 	
 	
 
 def export_mesh2obj(name="test.obj"):
 	if (len(bpy.data.objects)):
 		bpy.ops.export_scene.obj(filepath=(path+name), use_selection=True, use_materials=False)
+
 
 
 if __name__ == "__main__":
