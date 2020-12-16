@@ -76,7 +76,7 @@ def create_mesh():
 def create_pipeline():
 	create_pipe()
 	set_pipelinesetting(bpy.context.selected_objects[0])
-#	extrude_pipe(bpy.context.selected_objects[0].data.splines[0].bezier_points[1], (2, 0, 2))
+	extrude_pipe(bpy.context.selected_objects[0].data.splines[0].bezier_points[1], (2, 0, 2))
 	
 def create_pipe():
 	bpy.ops.curve.primitive_bezier_curve_add()
@@ -92,18 +92,27 @@ def set_vertpos(vertex, pos):
 def set_pipelinesetting(pipeline):
 	pipeline.data.bevel_depth = 0.2
 	pipeline.data.bevel_resolution = 2
-	
-	
-	
 	bpy.ops.object.editmode_toggle()
 	bpy.ops.curve.select_all(action='SELECT')
 	bpy.ops.curve.handle_type_set(type='VECTOR')
 	bpy.ops.object.editmode_toggle()
 
 	
-#def extrude_pipe(origin, pos):
-	
-	
+def extrude_pipe(origin, pos):
+	bpy.ops.object.editmode_toggle()
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_control_point = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_left_handle = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_right_handle = 0
+	bpy.ops.curve.extrude_move()
+	bpy.ops.transform.translate(value=(0, 0, 0)) # local move, need fix to move into end crd
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_control_point = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_left_handle = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_right_handle = 0
+	bpy.context.selected_objects[0].data.splines[0].bezier_points[1].select_control_point = 1
+	bpy.ops.transform.transform(mode='CURVE_SHRINKFATTEN', value=(1.4, 0, 0, 0))
+	bpy.ops.object.editmode_toggle()
+
+
 	
 	
 
