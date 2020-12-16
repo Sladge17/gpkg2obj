@@ -75,6 +75,8 @@ def create_mesh():
 	
 def create_pipeline():
 	create_pipe()
+	set_pipelinesetting(bpy.context.selected_objects[0])
+#	extrude_pipe(bpy.context.selected_objects[0].data.splines[0].bezier_points[1], (2, 0, 2))
 	
 def create_pipe():
 	bpy.ops.curve.primitive_bezier_curve_add()
@@ -85,6 +87,23 @@ def set_vertpos(vertex, pos):
 	vertex.co[0] = pos[0]
 	vertex.co[1] = pos[1]
 	vertex.co[2] = pos[2]
+	
+	
+def set_pipelinesetting(pipeline):
+	pipeline.data.bevel_depth = 0.2
+	pipeline.data.bevel_resolution = 2
+	
+	
+	
+	bpy.ops.object.editmode_toggle()
+	bpy.ops.curve.select_all(action='SELECT')
+	bpy.ops.curve.handle_type_set(type='VECTOR')
+	bpy.ops.object.editmode_toggle()
+
+	
+#def extrude_pipe(origin, pos):
+	
+	
 	
 	
 
