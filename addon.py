@@ -57,12 +57,22 @@ file = "engenier_network.gpkg"
 #bpy.context.object.data.splines.active.bezier_points[0].co[2] = 2
 
 def main():
+	clear_scene()
 	parsing_file()
+	export_mesh2obj()
+	
+
+def clear_scene():
+	bpy.ops.object.select_all(action='SELECT')
+	bpy.ops.object.delete()	
 
 def parsing_file():
 	data = geopandas.read_file(path + file)
 	print(data.head(1))
 
+def export_mesh2obj(name="test.obj"):
+	if (len(bpy.data.objects)):
+		bpy.ops.export_scene.obj(filepath=(path+name), use_selection=True, use_materials=False)
 
 
 if __name__ == "__main__":
