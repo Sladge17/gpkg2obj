@@ -1,4 +1,5 @@
 import bpy
+import bmesh
 import sys # to work geopandas
 sys.path.append('/Users/jthuy/.local/lib/python3.7/site-packages')
 import geopandas
@@ -50,7 +51,8 @@ def parsing_file():
 	print(data.head(1))
 	
 def create_mesh():
-	create_pipeline()
+#	create_pipeline()
+	create_box((0, 0, 0))
 	
 def create_pipeline():
 	create_pipe()
@@ -65,15 +67,15 @@ def create_pipe():
 	
 def extrude_pipe(pos):
 	bpy.ops.object.editmode_toggle()
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_control_point = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_left_handle = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[0].select_right_handle = 0
+	bpy.context.edit_object.data.splines[0].bezier_points[0].select_control_point = 0
+	bpy.context.edit_object.data.splines[0].bezier_points[0].select_left_handle = 0
+	bpy.context.edit_object.data.splines[0].bezier_points[0].select_right_handle = 0
 	bpy.ops.curve.extrude_move()
-	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[2], (pos[0], pos[1], pos[2]))
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_control_point = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_left_handle = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[2].select_right_handle = 0
-	bpy.context.selected_objects[0].data.splines[0].bezier_points[1].select_control_point = 1
+	set_vertpos(bpy.context.edit_object.data.splines[0].bezier_points[2], (pos[0], pos[1], pos[2]))
+	bpy.context.edit_object.data.splines[0].bezier_points[2].select_control_point = 0
+	bpy.context.edit_object.data.splines[0].bezier_points[2].select_left_handle = 0
+	bpy.context.edit_object.data.splines[0].bezier_points[2].select_right_handle = 0
+	bpy.context.edit_object.data.splines[0].bezier_points[1].select_control_point = 1
 	# value need fix, angle betveen vertexes respondsiable (1.4 = 90 deg) !!!
 	bpy.ops.transform.transform(mode='CURVE_SHRINKFATTEN', value=(1.4, 0, 0, 0))
 	bpy.ops.object.editmode_toggle()
@@ -81,14 +83,9 @@ def extrude_pipe(pos):
 def add_pipe():
 	bpy.ops.object.editmode_toggle()
 	bpy.ops.curve.primitive_bezier_curve_add()
-	set_vertpos(bpy.context.selected_objects[0].data.splines[1].bezier_points[0], (1, 0, 0))
-	set_vertpos(bpy.context.selected_objects[0].data.splines[1].bezier_points[1], (1, 0, 2))
+	set_vertpos(bpy.context.edit_object.data.splines[1].bezier_points[0], (1, 0, 0))
+	set_vertpos(bpy.context.edit_object.data.splines[1].bezier_points[1], (1, 0, 2))
 	bpy.ops.object.editmode_toggle()
-	
-def set_vertpos(vertex, pos):
-	vertex.co[0] = pos[0]
-	vertex.co[1] = pos[1]
-	vertex.co[2] = pos[2]
 	
 def set_pipelinesetting(pipeline):
 	pipeline.data.bevel_depth = 0.2
@@ -98,12 +95,26 @@ def set_pipelinesetting(pipeline):
 	bpy.ops.curve.handle_type_set(type='VECTOR')
 	bpy.ops.object.editmode_toggle()
 	
-	
+def create_box(pos):
+	size = (4, 2, 5)
+	bpy.ops.mesh.primitive_cube_add(location=(pos[0], pos[1], pos[2]))
+	set_vertpos(bpy.context.scene.objects[0].data.vertices[0], (pos[0] - size[0] / 2, pos[1] - size[1] / 2, pos[2] - size[2] / 2))
+	set_vertpos(bpy.context.scene.objects[0].data.vertices[1], (pos[0] - size[0] / 2, pos[1] - size[1] / 2, pos[2] + size[2] / 2))
+	set_vertpos(bpy.context.scene.objects[0].data.vertices[2], (pos[0] - size[0] / 2, pos[1] + size[1] / 2, pos[2] - size[2] / 2))
+	set_vertpos(bpy.context.scene.objects[0].data.vertices[3], (pos[0] - size[0] / 2, pos[1] + size[1] / 2, pos[2] + size[2] / 2))
+	set_vertpos(bpy.context.scene.objects[0].data.vertices[4], (pos[0] + size[0] / 2, pos[1] - size[1] / 2, pos[2] - size[2] / 2))
+	set_vertpos(bpy.context.scene.objects[0].data.vertices[5], (pos[0] + size[0] / 2, pos[1] - size[1] / 2, pos[2] + size[2] / 2))
+	set_vertpos(bpy.context.scene.objects[0].data.vertices[6], (pos[0] + size[0] / 2, pos[1] + size[1] / 2, pos[2] - size[2] / 2))
+	set_vertpos(bpy.context.scene.objects[0].data.vertices[7], (pos[0] + size[0] / 2, pos[1] + size[1] / 2, pos[2] + size[2] / 2))
+
+def set_vertpos(vertex, pos):
+	vertex.co[0] = pos[0]
+	vertex.co[1] = pos[1]
+	vertex.co[2] = pos[2]
 
 def export_mesh2obj(name="test.obj"):
 	if (len(bpy.data.objects)):
 		bpy.ops.export_scene.obj(filepath=(path+name), use_selection=True, use_materials=False)
-
 
 
 if __name__ == "__main__":
