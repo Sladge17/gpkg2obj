@@ -14,8 +14,8 @@ box_size = (1, 1, 1)
 
 def main():
 	clear_scene()
-	parsing_file()
-#	create_mesh()
+#	parsing_file()
+	create_mesh()
 #	export_meshes()
 
 
