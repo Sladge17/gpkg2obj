@@ -55,7 +55,7 @@ def parsing_file():
 	
 def create_mesh():
 #	create_pipeline()
-	create_box((0, 0, 0))
+	create_box((0∑, 0, 0))
 	
 def create_pipeline():
 	create_pipe()
@@ -99,7 +99,7 @@ def set_pipelinesetting(pipeline):
 	bpy.ops.object.editmode_toggle()
 	
 def create_box(pos):
-	bpy.ops.mesh.primitive_cube_add(location=(pos[0], pos[1], pos[2]))
+	bpy.ops.mesh.primitive_cube_add()
 	set_vertpos(bpy.context.scene.objects[0].data.vertices[0], (pos[0] - box_size[0] / 2, pos[1] - box_size[1] / 2, pos[2] - box_size[2] / 2))
 	set_vertpos(bpy.context.scene.objects[0].data.vertices[1], (pos[0] - box_size[0] / 2, pos[1] - box_size[1] / 2, pos[2] + box_size[2] / 2))
 	set_vertpos(bpy.context.scene.objects[0].data.vertices[2], (pos[0] - box_size[0] / 2, pos[1] + box_size[1] / 2, pos[2] - box_size[2] / 2))
