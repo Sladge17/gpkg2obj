@@ -43,7 +43,7 @@ def main():
 	clear_scene()
 #	parsing_file()
 	create_mesh()
-#	export_mesh2obj()
+#	export_meshes()
 
 def clear_scene():
 	bpy.ops.object.select_all(action='SELECT')
@@ -55,7 +55,7 @@ def parsing_file():
 	
 def create_mesh():
 #	create_pipeline()
-	create_box((0∑, 0, 0))
+	create_box((0, 0, 0))
 	
 def create_pipeline():
 	create_pipe()
@@ -114,9 +114,22 @@ def set_vertpos(vertex, pos):
 	vertex.co[1] = pos[1]
 	vertex.co[2] = pos[2]
 
-def export_mesh2obj(name="test.obj"):
-	if (len(bpy.data.objects)):
-		bpy.ops.export_scene.obj(filepath=(path+name), use_selection=True, use_materials=False)
+
+def export_meshes():
+	for mesh in bpy.data.objects:
+		mesh.select_set(1)
+		export_mesh2obj()
+		mesh.select_set(0)
+
+def export_mesh2obj(index=[1]):
+	suffix = ""
+	if index[0] < 10:
+		suffix = "00"
+	elif index[0] < 100:
+		suffix = "0"
+	name = f"object_{suffix}{index[0]}.obj"
+	bpy.ops.export_scene.obj(filepath=(path+name), use_selection=True, use_materials=False)
+	index[0] += 1
 
 
 if __name__ == "__main__":
