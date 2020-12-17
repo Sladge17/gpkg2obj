@@ -1,9 +1,8 @@
 import bpy
-import bmesh
 import sys # to work geopandas
 sys.path.append('/Users/jthuy/.local/lib/python3.7/site-packages')
-import geopandas
-
+import pandas as pd
+import geopandas as gpd
 
 path = "/Users/jthuy/Desktop/BConv/"
 file = "engenier_network.gpkg"
@@ -12,47 +11,24 @@ pipe_diameter = 0.2
 pepe_resolution = 2 # equally 8 edges
 box_size = (1, 1, 1)
 
-# bpy.context.scene.objects['Plane'].data.vertices[0].co[2] = 2
-
-# del all objects from scene
-#for i in bpy.data.objects:
-#    i.select_set(1)
-#    bpy.ops.object.delete()
-
-# del all objects from scene
-#for i in bpy.context.scene.objects:
-#    i.select_set(1)
-#    bpy.ops.object.delete()
-#bpy.ops.object.select_all()
-#bpy.ops.object.delete()
-
-
-
-# plane vertex move
-#bpy.ops.mesh.primitive_plane_add()
-#bpy.data.objects[0].data.vertices[0].co[2] = 2
-#bpy.context.scene.objects[0].data.vertices[0].co[2] = 2
-
-
-# bezier point move
-#bpy.ops.curve.primitive_bezier_curve_add()
-#bpy.data.objects[0].data.splines.active.bezier_points[0].co[2] = 2
-#bpy.context.object.data.splines.active.bezier_points[0].co[2] = 2
 
 def main():
 	clear_scene()
-#	parsing_file()
-	create_mesh()
+	parsing_file()
+#	create_mesh()
 #	export_meshes()
+
 
 def clear_scene():
 	bpy.ops.object.select_all(action='SELECT')
 	bpy.ops.object.delete()	
 
+
 def parsing_file():
-	data = geopandas.read_file(path + file)
+	data = gpd.read_file(path + file)
 	print(data.head(1))
 	
+
 def create_mesh():
 #	create_pipeline()
 	create_box((0, 0, 0))
