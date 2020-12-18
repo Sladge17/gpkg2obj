@@ -1,8 +1,9 @@
 import bpy
 import sys # to work geopandas
 sys.path.append('/Users/jthuy/.local/lib/python3.7/site-packages')
-import pandas as pd
+#import pandas as pd
 import geopandas as gpd
+import numpy as np
 
 path = "/Users/jthuy/Desktop/BConv/"
 file = "engenier_network.gpkg"
@@ -13,9 +14,28 @@ box_size = (1, 1, 1)
 
 
 def main():
-	clear_scene()
-#	parsing_file()
-	create_mesh()
+#	clear_scene()
+
+    data = gpd.read_file(path + file)
+    df = data[['ID', 'SECT_TYPE', 'SECT_WIDTH', 'SECT_HEIGH', 'H1', 'geometry']]
+    for string in range(len(df)):
+        id = int(df['ID'][string])
+        vertex = len(df['geometry'][string][0].xy[0])
+
+        for vertex in range(len(df['geometry'][string][0].xy[0]) - 1):
+            crd_x1 = round(df['geometry'][string][0].xy[0][vertex], 3)
+            crd_y1 = round(df['geometry'][string][0].xy[1][vertex], 3)
+            crd_x2 = round(df['geometry'][string][0].xy[0][vertex + 1], 3)
+            crd_y2 = round(df['geometry'][string][0].xy[1][vertex + 1], 3)
+            crd_z = -round(df['H1'][string].item(), 3)
+#            df['H1'][string] = int(df['H1'][string])
+#            print(type(df['H1'][string]))
+            create_pipe(crd_x1, crd_y1, crd_x2, crd_y2, crd_z)
+            break
+        break
+    
+#	parsing_file() NEED DEL
+#	create_mesh()
 #	export_meshes()
 
 
@@ -39,10 +59,12 @@ def create_pipeline():
 	add_pipe()
 	set_pipelinesetting(bpy.context.selected_objects[0])
 	
-def create_pipe():
+def create_pipe(crd_x1, crd_y1, crd_x2, crd_y2, crd_z):
+#	print(type(crd_z), crd_z)
 	bpy.ops.curve.primitive_bezier_curve_add()
-	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[0], (0, 0, 0))
-	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[1], (0, 0, 2))
+	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[0], (crd_x1, crd_y1, crd_z))
+	set_vertpos(bpy.context.selected_objects[0].data.splines[0].bezier_points[1], (crd_x2, crd_y2, crd_z))
+	set_pipelinesetting(bpy.context.selected_objects[0]) # TMP LINE
 	
 def extrude_pipe(pos):
 	bpy.ops.object.editmode_toggle()
