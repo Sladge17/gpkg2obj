@@ -14,27 +14,25 @@ box_size = (1, 1, 1)
 
 
 def main():
-#	clear_scene()
+	clear_scene()
+	data = gpd.read_file(path + file)
+	df = data[['ID', 'SECT_TYPE', 'SECT_WIDTH', 'SECT_HEIGH', 'H1', 'geometry']]
+	for string in range(len(df)):
+		id = int(df['ID'][string])
+		vertex = len(df['geometry'][string][0].xy[0])	
+		for vertex in range(len(df['geometry'][string][0].xy[0]) - 1):
+			crd_x1 = round(df['geometry'][string][0].xy[0][vertex], 3)
+			crd_y1 = round(df['geometry'][string][0].xy[1][vertex], 3)
+			crd_x2 = round(df['geometry'][string][0].xy[0][vertex + 1], 3)
+			crd_y2 = round(df['geometry'][string][0].xy[1][vertex + 1], 3)
+			crd_z = -round(df['H1'][string].item(), 3)
+			# df['H1'][string] = int(df['H1'][string]) #
+			# print(type(df['H1'][string])) #
+			create_pipe(crd_x1, crd_y1, crd_x2, crd_y2, crd_z)
+			break
+		break
 
-    data = gpd.read_file(path + file)
-    df = data[['ID', 'SECT_TYPE', 'SECT_WIDTH', 'SECT_HEIGH', 'H1', 'geometry']]
-    for string in range(len(df)):
-        id = int(df['ID'][string])
-        vertex = len(df['geometry'][string][0].xy[0])
-
-        for vertex in range(len(df['geometry'][string][0].xy[0]) - 1):
-            crd_x1 = round(df['geometry'][string][0].xy[0][vertex], 3)
-            crd_y1 = round(df['geometry'][string][0].xy[1][vertex], 3)
-            crd_x2 = round(df['geometry'][string][0].xy[0][vertex + 1], 3)
-            crd_y2 = round(df['geometry'][string][0].xy[1][vertex + 1], 3)
-            crd_z = -round(df['H1'][string].item(), 3)
-#            df['H1'][string] = int(df['H1'][string])
-#            print(type(df['H1'][string]))
-            create_pipe(crd_x1, crd_y1, crd_x2, crd_y2, crd_z)
-            break
-        break
-    
-#	parsing_file() NEED DEL
+#	parsing_file() NEED DELß
 #	create_mesh()
 #	export_meshes()
 
