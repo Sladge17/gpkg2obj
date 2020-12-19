@@ -133,7 +133,7 @@ def export_meshes():
 
 def export_mesh2obj():
 	name = bpy.context.selected_objects[0].name
-	bpy.ops.export_scene.obj(filepath=(path+"result/"+name), use_selection=True, use_materials=False)
+	bpy.ops.export_scene.obj(filepath=(path+"result/"+name+".obj"), use_selection=True, use_materials=False)
 
 
 if __name__ == "__main__":
