@@ -1,3 +1,2 @@
 #!/bin/bash
-#!/bin/zsh
-/Applications/Blender.app/Contents/MacOS/Blender -b --python crcube.py
+/Applications/Blender.app/Contents/MacOS/Blender -b --python converter.py
