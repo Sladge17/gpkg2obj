@@ -1,10 +1,12 @@
 import bpy
 import os
+import sys # to work geopandas
+sys.path.append('/Users/jthuy/.local/lib/python3.7/site-packages')
+#import pandas as pd
 import geopandas as gpd
 import numpy as np
 
-
-path = os.path.join(os.getcwd(), r"Desktop/BConv")
+path = "/Users/jthuy/Desktop/BConv/"
 file = "engenier_network.gpkg"
 
 pepe_resolution = 2 # equally 8 edges
@@ -13,8 +15,8 @@ box_size = (1, 1, 1)
 
 def main():
 	clear_scene()
-	data = gpd.read_file(os.path.join(path, file))
-
+	data = gpd.read_file(path + file)
+	
 #	df = data[['ID', 'SECT_TYPE', 'SECT_WIDTH', 'SECT_HEIGH', 'H1', 'geometry']]
 #	for string in range(len(df)):
 #		id = int(df['ID'][string])
@@ -44,9 +46,9 @@ def main():
 		d = round(df['SECT_HEIGH'][string].item() / 1000, 3) # d / 1000 <--- FOR TEST
 		create_mesh(string, id, x1, y1, z1, x2, y2, z2, d)
 	## FOR TEST
-
-	if not os.path.isdir(os.path.join(path, "result")):
-		os.mkdir(os.path.join(path, "result"))
+		
+	if not os.path.isdir(path + "result"):
+		os.mkdir(path + "result")	
 	export_meshes()
 
 
@@ -66,7 +68,8 @@ def create_mesh(string, id, x1, y1, z1, x2, y2, z2, d):
 			break
 	else:
 		create_pipeline(id, x1, y1, z1, x2, y2, z2, d)
-	bpy.ops.object.select_all(action='DESELECT')	
+	bpy.ops.object.select_all(action='DESELECT')
+	
 	
 def create_pipeline(id, x1, y1, z1, x2, y2, z2, d):
 	bpy.ops.curve.primitive_bezier_curve_add()
@@ -130,9 +133,7 @@ def export_meshes():
 
 def export_mesh2obj():
 	name = bpy.context.selected_objects[0].name
-	bpy.ops.export_scene.obj(filepath=os.path.join(path, "result", name),
-							use_selection=True,
-							use_materials=False)
+	bpy.ops.export_scene.obj(filepath=(path+"result/"+name), use_selection=True, use_materials=False)
 
 
 if __name__ == "__main__":
