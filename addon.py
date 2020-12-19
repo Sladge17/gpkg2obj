@@ -44,58 +44,32 @@ def main():
 		y2 = round(df['Y2'][string].item(), 3)
 		z2 = -round(df['Z2'][string].item(), 3)
 		d = round(df['SECT_HEIGH'][string].item() / 1000, 3) # d / 1000 <--- FOR TEST
-		
-		if not string:
-			create_pipeline(id, x1, y1, z1, x2, y2, z2, d)
-			bpy.ops.object.select_all(action='DESELECT')
-			continue
-		
-		for object in bpy.data.objects:
-			if object.name == id:
-				object.select_set(1)
-				add_pipe(x1, y1, z1, x2, y2, z2, d)
-				break
-		else:
-			create_pipeline(id, x1, y1, z1, x2, y2, z2, d)
-		bpy.ops.object.select_all(action='DESELECT')
+		create_mesh(string, id, x1, y1, z1, x2, y2, z2, d)
+	## FOR TEST
 		
 	if not os.path.isdir(path + "result"):
-		os.mkdir(path + "result")
-			
-	for object in bpy.data.objects:
-		object.select_set(1)
-		set_pipelinesetting(bpy.context.selected_objects[0])
-		export_mesh2obj()
-		object.select_set(0)
-		
-		
-#		set_pipelinesetting(bpy.context.selected_objects[0])
-#		break
-#	bpy.ops.object.select_all(action='DESELECT')
-
-#	parsing_file() NEED DELß
-#	create_mesh()
-#	export_meshes()
+		os.mkdir(path + "result")	
+	export_meshes()
 
 
 def clear_scene():
 	bpy.ops.object.select_all(action='SELECT')
 	bpy.ops.object.delete()	
 
-
-#def parsing_file():
-#	data = gpd.read_file(path + file)
-#	print(data.head(1))	
-
-#def create_mesh():
-#	create_pipeline()
-#	create_box((0, 0, 0))
+def create_mesh(string, id, x1, y1, z1, x2, y2, z2, d):
+	if not string:
+		create_pipeline(id, x1, y1, z1, x2, y2, z2, d)
+		bpy.ops.object.select_all(action='DESELECT')
+		return	
+	for object in bpy.data.objects:
+		if object.name == id:
+			object.select_set(1)
+			add_pipe(x1, y1, z1, x2, y2, z2, d)
+			break
+	else:
+		create_pipeline(id, x1, y1, z1, x2, y2, z2, d)
+	bpy.ops.object.select_all(action='DESELECT')
 	
-#def create_pipeline():
-#	create_pipe()
-#	extrude_pipe((2, 0, 2))
-#	add_pipe()
-#	set_pipelinesetting(bpy.context.selected_objects[0])
 	
 def create_pipeline(id, x1, y1, z1, x2, y2, z2, d):
 	bpy.ops.curve.primitive_bezier_curve_add()
@@ -150,22 +124,12 @@ def set_vertpos(vertex, pos):
 	vertex.co[1] = pos[1]
 	vertex.co[2] = pos[2]
 
-
 def export_meshes():
 	for mesh in bpy.data.objects:
 		mesh.select_set(1)
+		set_pipelinesetting(bpy.context.selected_objects[0])
 		export_mesh2obj()
 		mesh.select_set(0)
-
-#def export_mesh2obj(index=[1]):
-#	suffix = ""
-#	if index[0] < 10:
-#		suffix = "00"
-#	elif index[0] < 100:
-#		suffix = "0"
-#	name = f"object_{suffix}{index[0]}.obj"
-#	bpy.ops.export_scene.obj(filepath=(path+name), use_selection=True, use_materials=False)
-#	index[0] += 1
 
 def export_mesh2obj():
 	name = bpy.context.selected_objects[0].name
